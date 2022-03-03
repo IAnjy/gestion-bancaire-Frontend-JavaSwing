@@ -77,7 +77,7 @@ public class Versement {
 		
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 800, 600);
+		frame.setBounds(100, 100, 1024, 720);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Panel panel = new Panel();
@@ -99,7 +99,7 @@ public class Versement {
 		Label Client = new Label("Versement");
 		Client.setForeground(Color.BLACK);
 		Client.setFont(new Font("Papyrus", Font.BOLD | Font.ITALIC, 14));
-		Client.setBounds(10, 94, 97, 22);
+		Client.setBounds(62, 161, 97, 22);
 		panel.add(Client);
 		
 		Button ajouter = new Button("Faire un versement");
@@ -114,11 +114,11 @@ public class Versement {
 		ajouter.setForeground(Color.BLACK);
 		ajouter.setFont(new Font("Sylfaen", Font.PLAIN, 12));
 		ajouter.setBackground(new Color(102, 255, 102));
-		ajouter.setBounds(26, 127, 120, 26);
+		ajouter.setBounds(83, 194, 120, 26);
 		panel.add(ajouter);
 		
 		Label Rechercher_label = new Label("Rechercher :");
-		Rechercher_label.setBounds(472, 131, 77, 22);
+		Rechercher_label.setBounds(594, 194, 77, 26);
 		panel.add(Rechercher_label);
 		
 		TextField recherche_versement = new TextField();
@@ -131,11 +131,11 @@ public class Versement {
 				recherche.sort(query, model, table);
 			}
 		});
-		recherche_versement.setBounds(555, 131, 210, 22);
+		recherche_versement.setBounds(687, 194, 261, 26);
 		panel.add(recherche_versement);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(26, 159, 739, 350);
+		scrollPane.setBounds(83, 233, 865, 370);
 		panel.add(scrollPane);
 		
 		table = new JTable();

@@ -2,6 +2,7 @@ package bank;
 
 import java.awt.EventQueue;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -14,8 +15,9 @@ import java.awt.event.ActionEvent;
 
 
 import java.awt.Panel;
-
+import java.awt.SystemColor;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Color;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -28,7 +30,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import header.Header;
+import retrait.Retrait;
 import utils.Recherche;
+import versement.Versement;
 
 import java.awt.TextField;
 import java.awt.Window;
@@ -43,6 +47,10 @@ import javax.swing.RowFilter;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JSpinner;
+import java.awt.Canvas;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 public class Bank {
 
@@ -90,29 +98,33 @@ public class Bank {
 		frame = new JFrame();
 		frame.setLocationRelativeTo(frame);
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 800, 600);
+		frame.setBounds(100, 100, 1024, 720);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Panel panel = new Panel();
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 		
+		
+		
+		
+		
+		
 		/*-----------------HEADER---------------*/
 		
 		Header header = new Header();
 		header.header(panel, frame);
 		
-		/*----------------- FIN HEADER---------------*/
 		
-		/*-----------------FOOTER---------------*/
 		
+		/*-----------------FOOTER---------------*/		
 		header.footer(panel);
 		/*-----------------FIN FOOTER---------------*/
 		
 		Label Client = new Label("Client(es)");
 		Client.setFont(new Font("Papyrus", Font.BOLD | Font.ITALIC, 14));
 		Client.setForeground(Color.BLACK);
-		Client.setBounds(10, 94, 97, 22);
+		Client.setBounds(61, 160, 97, 22);
 		panel.add(Client);
 		
 		Button ajouter = new Button("Ajouter");
@@ -143,11 +155,11 @@ public class Bank {
 		ajouter.setForeground(new Color(0, 0, 0));
 		ajouter.setFont(new Font("Sylfaen", Font.PLAIN, 12));
 		ajouter.setBackground(new Color(102, 255, 102));
-		ajouter.setBounds(26, 133, 70, 26);
+		ajouter.setBounds(77, 194, 70, 26);
 		panel.add(ajouter);
 		
 		Label Rechercher_label = new Label("Rechercher :");
-		Rechercher_label.setBounds(472, 137, 77, 22);
+		Rechercher_label.setBounds(619, 194, 77, 26);
 		panel.add(Rechercher_label);
 		
 		TextField recherche_client = new TextField();
@@ -160,7 +172,7 @@ public class Bank {
 				recherche.sort(query, model, table);
 			}
 		});
-		recherche_client.setBounds(555, 137, 210, 22);
+		recherche_client.setBounds(702, 194, 240, 26);
 		panel.add(recherche_client);
 		
 		Button modifier = new Button("Modifier");
@@ -185,7 +197,7 @@ public class Bank {
 		modifier.setForeground(Color.BLACK);
 		modifier.setFont(new Font("Sylfaen", Font.PLAIN, 12));
 		modifier.setBackground(new Color(255, 255, 51));
-		modifier.setBounds(102, 133, 70, 26);
+		modifier.setBounds(153, 194, 70, 26);
 		panel.add(modifier);
 		
 		Button supprimer = new Button("Supprimer");
@@ -225,11 +237,11 @@ public class Bank {
 		supprimer.setForeground(Color.BLACK);
 		supprimer.setFont(new Font("Sylfaen", Font.PLAIN, 12));
 		supprimer.setBackground(new Color(255, 0, 0));
-		supprimer.setBounds(178, 133, 77, 26);
+		supprimer.setBounds(229, 194, 77, 26);
 		panel.add(supprimer);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(26, 174, 739, 350);
+		scrollPane.setBounds(77, 240, 865, 370);
 		panel.add(scrollPane);
 		
 		table = new JTable();
@@ -266,5 +278,42 @@ public class Bank {
 		
 		
 		scrollPane.setViewportView(table);
+		
+		Button mouvementBancaire = new Button("Mouvement Bancaire");
+		mouvementBancaire.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Integer i = table.getSelectedRow();
+				if (i>=0) {		
+					Long id = (Long) model.getValueAt(i, 4);
+					//System.out.println(id);							
+					//Window.frame.hide();
+					frame.setVisible(false);
+					MouvementBancaire mouvementBancaire = new MouvementBancaire();
+					mouvementBancaire.frame.setVisible(true);
+					mouvementBancaire.frame.setLocationRelativeTo(null);
+					//ModifClient modifClient = new ModifClient(id);
+					//modifClient.frame.setVisible(true);
+					//modifClient.frame.setLocationRelativeTo(null);
+				} else {
+					//erreur mila miselecta
+					JOptionPane.showMessageDialog(frame,  "Veuillez séléctionner une ligne SVP!", "ERREUR", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		mouvementBancaire.setForeground(Color.WHITE);
+		mouvementBancaire.setFont(new Font("Sylfaen", Font.BOLD, 12));
+		mouvementBancaire.setBackground(SystemColor.activeCaption);
+		mouvementBancaire.setBounds(312, 194, 141, 26);
+		panel.add(mouvementBancaire);
+	}
+	
+	public void resetColor(Panel panely) {
+		// TODO Auto-generated method stub
+		panely.setBackground(new java.awt.Color(240,240,240));
+	}
+
+	public void setColor(Panel panely) {
+		// TODO Auto-generated method stub
+		panely.setBackground(new java.awt.Color(255,255,255));
 	}
 }

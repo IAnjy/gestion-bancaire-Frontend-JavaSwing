@@ -75,7 +75,7 @@ public class Retrait {
 		
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 800, 600);
+		frame.setBounds(100, 100, 1024, 720);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Panel panel = new Panel();
@@ -98,7 +98,7 @@ public class Retrait {
 		Label Client = new Label("Retrait");
 		Client.setForeground(Color.BLACK);
 		Client.setFont(new Font("Papyrus", Font.BOLD | Font.ITALIC, 14));
-		Client.setBounds(10, 94, 97, 22);
+		Client.setBounds(67, 159, 97, 22);
 		panel.add(Client);
 		
 		Button ajouterRetrait = new Button("Faire un retrait");
@@ -113,11 +113,11 @@ public class Retrait {
 		ajouterRetrait.setForeground(Color.BLACK);
 		ajouterRetrait.setFont(new Font("Sylfaen", Font.PLAIN, 12));
 		ajouterRetrait.setBackground(new Color(102, 255, 102));
-		ajouterRetrait.setBounds(26, 127, 124, 26);
+		ajouterRetrait.setBounds(82, 194, 124, 26);
 		panel.add(ajouterRetrait);
 		
 		Label Rechercher_label = new Label("Rechercher :");
-		Rechercher_label.setBounds(472, 131, 77, 22);
+		Rechercher_label.setBounds(604, 194, 77, 26);
 		panel.add(Rechercher_label);
 		
 		TextField recherche_retrait = new TextField();
@@ -130,11 +130,11 @@ public class Retrait {
 				recherche.sort(query, model, table);
 			}
 		});
-		recherche_retrait.setBounds(555, 131, 210, 22);
+		recherche_retrait.setBounds(687, 194, 261, 26);
 		panel.add(recherche_retrait);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(26, 159, 739, 350);
+		scrollPane.setBounds(83, 233, 865, 370);
 		panel.add(scrollPane);
 		
 		table = new JTable();

@@ -1,5 +1,6 @@
 package header;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Label;
@@ -8,7 +9,9 @@ import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import bank.Bank;
 import retrait.Retrait;
@@ -16,14 +19,17 @@ import versement.Versement;
 
 public class Header {
 	public void header(Panel panel, JFrame frame) {
+		
+		
+		
 		Panel panel_1 = new Panel();
 		panel_1.setBackground(SystemColor.activeCaption);
-		panel_1.setBounds(0, 0, 794, 87);
+		panel_1.setBounds(0, 0, 1018, 154);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
 		Label TITLE = new Label("GESTION BANCAIRE");
-		TITLE.setBounds(270, 5, 254, 38);
+		TITLE.setBounds(578, 10, 254, 20);
 		TITLE.setForeground(Color.WHITE);
 		TITLE.setFont(new Font("Sylfaen", Font.BOLD, 24));
 		panel_1.add(TITLE);
@@ -42,16 +48,6 @@ public class Header {
 				resetColor(PanelClient);
 			}
 			
-			
-			/*public void setColor(Panel panelClient) {
-				panelClient.setBackground(new java.awt.Color(255,255,255));
-			}
-			
-			public void resetColor(Panel panely) {
-				panely.setBackground(new java.awt.Color(240,240,240));
-			}
-			*/
-			
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
@@ -65,14 +61,14 @@ public class Header {
 			}
 		});
 		PanelClient.setBackground(SystemColor.menu);
-		PanelClient.setBounds(43, 53, 170, 25);
+		PanelClient.setBounds(508, 46, 170, 38);
 		panel_1.add(PanelClient);
 		PanelClient.setLayout(null);
 		
 		
 		
 		Label ClientLabel = new Label("Client(es)");
-		ClientLabel.setBounds(51, 7, 62, 12);
+		ClientLabel.setBounds(51, 10, 62, 12);
 		PanelClient.add(ClientLabel);
 		
 		Panel PanelVersement = new Panel();
@@ -97,11 +93,11 @@ public class Header {
 		PanelVersement.setLayout(null);
 		PanelVersement.setFont(new Font("Sylfaen", Font.BOLD, 12));
 		PanelVersement.setBackground(SystemColor.menu);
-		PanelVersement.setBounds(311, 53, 170, 25);
+		PanelVersement.setBounds(726, 46, 170, 38);
 		panel_1.add(PanelVersement);
 		
 		Label VersementLabel = new Label("Versement");
-		VersementLabel.setBounds(51, 7, 71, 12);
+		VersementLabel.setBounds(50, 10, 71, 12);
 		PanelVersement.add(VersementLabel);
 		
 		Panel PanelRetrait = new Panel();
@@ -126,21 +122,65 @@ public class Header {
 		PanelRetrait.setLayout(null);
 		PanelRetrait.setFont(new Font("Sylfaen", Font.BOLD, 12));
 		PanelRetrait.setBackground(SystemColor.menu);
-		PanelRetrait.setBounds(577, 53, 170, 25);
+		PanelRetrait.setBounds(726, 102, 170, 38);
 		panel_1.add(PanelRetrait);
 		
 		Label RetraitLabel = new Label("Retrait");
 		RetraitLabel.setAlignment(Label.RIGHT);
-		RetraitLabel.setBounds(60, 7, 46, 12);
+		RetraitLabel.setBounds(60, 10, 46, 12);
 		PanelRetrait.add(RetraitLabel);
+		
+		Panel PanelRetrait_1 = new Panel();
+		PanelRetrait_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				frame.setVisible(false);
+				Retrait retrait = new Retrait();
+				retrait.frame.setVisible(true);
+				retrait.frame.setLocationRelativeTo(null);
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				setColor(PanelRetrait_1);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				resetColor(PanelRetrait_1);
+			}
+		});
+		PanelRetrait_1.setLayout(null);
+		PanelRetrait_1.setFont(new Font("Sylfaen", Font.BOLD, 12));
+		PanelRetrait_1.setBackground(SystemColor.menu);
+		PanelRetrait_1.setBounds(508, 102, 170, 38);
+		panel_1.add(PanelRetrait_1);
+		
+		Label TransfertLabel = new Label("Tranf\u00E9rer de l'argent");
+		TransfertLabel.setAlignment(Label.RIGHT);
+		TransfertLabel.setBounds(10, 10, 137, 18);
+		PanelRetrait_1.add(TransfertLabel);
+		
+		JLabel lblLabel = new JLabel("label");
+		lblLabel.setIcon(new ImageIcon("D:\\Bossy\\java\\BanqueInterface\\img\\BankTR.png"));
+		lblLabel.setBounds(79, -11, 269, 154);
+		panel_1.add(lblLabel);
 	}
 	
 	
 	public void footer(Panel panel) {
 		Panel footerTab = new Panel();
 		footerTab.setBackground(SystemColor.activeCaption);
-		footerTab.setBounds(0, 534, 794, 37);
+		footerTab.setBounds(0, 644, 1018, 47);
 		panel.add(footerTab);
+		footerTab.setLayout(null);
+		
+		Label label = new Label("Gestion bancaire by Ianjy and Nancy");
+		label.setBounds(10, 15, 207, 22);
+		footerTab.add(label);
+		
+		Label label_1 = new Label("Copyright 2022");
+		label_1.setBounds(916, 15, 102, 22);
+		footerTab.add(label_1);
 	}
 	
 	public void resetColor(Panel panely) {

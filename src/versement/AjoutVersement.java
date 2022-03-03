@@ -215,7 +215,7 @@ public class AjoutVersement {
 		labelPrenoms.setBounds(169, 74, 64, 22);
 		panel_2.add(labelPrenoms);
 		
-		Label labelSolde = new Label("Solde Actuelle :");
+		Label labelSolde = new Label("Solde Actuel :");
 		labelSolde.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		labelSolde.setBounds(169, 109, 83, 22);
 		panel_2.add(labelSolde);
@@ -230,7 +230,7 @@ public class AjoutVersement {
 		panel.add(panel_2_1);
 		
 		JSpinner montantVersement = new JSpinner();
-		montantVersement.setModel(new SpinnerNumberModel(new Long(1), new Long(1), null, new Long(1)));
+		montantVersement.setModel(new SpinnerNumberModel(new Long(100), new Long(100), null, new Long(1)));
 		montantVersement.setBounds(97, 45, 220, 22);
 		panel_2_1.add(montantVersement);
 		

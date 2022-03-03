@@ -216,7 +216,7 @@ public class AjoutRetrait {
 		labelPrenoms.setBounds(169, 74, 64, 22);
 		panel_2.add(labelPrenoms);
 		
-		Label labelSolde = new Label("Solde Actuelle :");
+		Label labelSolde = new Label("Solde Actuel :");
 		labelSolde.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		labelSolde.setBounds(169, 109, 83, 22);
 		panel_2.add(labelSolde);
