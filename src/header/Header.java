@@ -15,13 +15,13 @@ import javax.swing.JLabel;
 
 import bank.Bank;
 import retrait.Retrait;
+import transfert.Transfert;
 import versement.Versement;
 
 public class Header {
 	public void header(Panel panel, JFrame frame) {
 		
-		
-		
+
 		Panel panel_1 = new Panel();
 		panel_1.setBackground(SystemColor.activeCaption);
 		panel_1.setBounds(0, 0, 1018, 154);
@@ -130,40 +130,40 @@ public class Header {
 		RetraitLabel.setBounds(60, 10, 46, 12);
 		PanelRetrait.add(RetraitLabel);
 		
-		Panel PanelRetrait_1 = new Panel();
-		PanelRetrait_1.addMouseListener(new MouseAdapter() {
+		Panel PanelTransfert = new Panel();
+		PanelTransfert.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				frame.setVisible(false);
-				Retrait retrait = new Retrait();
-				retrait.frame.setVisible(true);
-				retrait.frame.setLocationRelativeTo(null);
-				
+				Transfert transfert = new Transfert();
+				transfert.frame.setVisible(true);
+				transfert.frame.setLocationRelativeTo(null);
 			}
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
-				setColor(PanelRetrait_1);
+				setColor(PanelTransfert);
 			}
 			@Override
 			public void mouseExited(MouseEvent arg0) {
-				resetColor(PanelRetrait_1);
+				resetColor(PanelTransfert);
 			}
 		});
-		PanelRetrait_1.setLayout(null);
-		PanelRetrait_1.setFont(new Font("Sylfaen", Font.BOLD, 12));
-		PanelRetrait_1.setBackground(SystemColor.menu);
-		PanelRetrait_1.setBounds(508, 102, 170, 38);
-		panel_1.add(PanelRetrait_1);
+		PanelTransfert.setLayout(null);
+		PanelTransfert.setFont(new Font("Sylfaen", Font.BOLD, 12));
+		PanelTransfert.setBackground(SystemColor.menu);
+		PanelTransfert.setBounds(508, 102, 170, 38);
+		panel_1.add(PanelTransfert);
 		
 		Label TransfertLabel = new Label("Tranf\u00E9rer de l'argent");
 		TransfertLabel.setAlignment(Label.RIGHT);
 		TransfertLabel.setBounds(10, 10, 137, 18);
-		PanelRetrait_1.add(TransfertLabel);
+		PanelTransfert.add(TransfertLabel);
 		
 		JLabel lblLabel = new JLabel("label");
 		lblLabel.setIcon(new ImageIcon("D:\\Bossy\\java\\BanqueInterface\\img\\BankTR.png"));
 		lblLabel.setBounds(79, -11, 269, 154);
 		panel_1.add(lblLabel);
+		
 	}
 	
 	

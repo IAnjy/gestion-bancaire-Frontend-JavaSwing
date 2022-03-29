@@ -15,7 +15,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
-
+import bank.ClientBean;
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -122,6 +122,69 @@ public class OperationVersement {
 			JOptionPane.showMessageDialog(null,  "Ooopsa! Une erreur est survenue! Veuillez réessayez SVP!", "ERREUR", JOptionPane.ERROR_MESSAGE);
 		}
 		return false;
+	}
+
+
+
+	public List<VersementBean> getVersementByClientId(Long id) {
+		List<VersementBean> lista = new ArrayList<VersementBean>();
+		OkHttpClient client = new OkHttpClient();
+		String urlGetVersementByClientId = "http://localhost:8000/api/clients/"+id+"/versements";
+		Request request = new Request
+				.Builder()
+				.url(urlGetVersementByClientId)
+				.build();
+		Call call = client.newCall(request);	
+		try {
+			Response response = call.execute();
+			if (response.isSuccessful()) {
+				String jsonData = response.body().string();
+				JSONObject forcast;
+				try {
+					forcast = (JSONObject) JSONValue.parseWithException(jsonData);
+					JSONArray hydramember =  (JSONArray) forcast.get("hydra:member");
+	
+					for (int i = 0; i < hydramember.size(); i++) { 
+						
+						JSONObject unVersement = (JSONObject) hydramember.get(i);
+						Long numVersement = (Long) unVersement.get("id");
+						Long montantVersement = (Long) unVersement.get("montantVersement");
+						
+						//----Date
+						String date = (String) unVersement.get("dateVersement");
+						String trueDate = null;
+						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+						try {
+							Date daty = formatter.parse(date);
+							trueDate = new SimpleDateFormat("dd/MMM/YYYY HH:mm").format(daty);
+							
+						} catch (java.text.ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						//----Date
+												
+											
+						
+						VersementBean bean = new VersementBean(numVersement, null, null, montantVersement, trueDate);
+						lista.add(bean);
+					} 						
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(null,  "Ooopsa! Une erreur est survenue! Veuillez réessayez SVP!", "ERREUR", JOptionPane.ERROR_MESSAGE);
+					System.exit(0);
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block						
+			System.err.println("erora !" + e);
+			JOptionPane.showMessageDialog(null, "Impossible de contacter la base de données", "ALERTE", JOptionPane.INFORMATION_MESSAGE);
+			System.exit(0);
+		}		
+		
+		return lista;
 	}
 
 }

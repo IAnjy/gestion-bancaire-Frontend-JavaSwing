@@ -51,7 +51,17 @@ public class ModifClient {
 	 * @param id 
 	 */
 	public ModifClient(Long id) {
-		initialize(id);
+		if (id == null) {
+			System.out.println("null");
+			JOptionPane.showMessageDialog(null, "Une Erreur s'est produite Veuillez réessayer!", "ALERTE", JOptionPane.INFORMATION_MESSAGE);
+			Bank client = new Bank();
+			client.frame.setVisible(true);
+			client.frame.setLocationRelativeTo(null);			
+			//System.exit(0);
+		} else {
+			initialize(id);
+		}
+		
 	}
 
 	/**
@@ -59,6 +69,7 @@ public class ModifClient {
 	 * @param id 
 	 */
 	private void initialize(Long id) {
+		
 		
 		OperationClient operation = new OperationClient();
 		
@@ -169,8 +180,6 @@ public class ModifClient {
 		retourBoutton.setBackground(SystemColor.activeCaption);
 		
 		for (ClientBean unclient : UNClientBean) {
-			
-			
 			
 			numCompteInput.setText(unclient.getNumCompte());
 			nomInput.setText(unclient.getNom());

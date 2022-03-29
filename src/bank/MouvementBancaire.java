@@ -10,8 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import header.Header;
+import retrait.OperationRetrait;
 import retrait.Retrait;
+import retrait.RetraitBean;
+import versement.OperationVersement;
 import versement.Versement;
+import versement.VersementBean;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,18 +23,25 @@ import java.awt.Panel;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
+
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.Button;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
 
 public class MouvementBancaire {
 
 	JFrame frame;
-	private JTable table;
-	private JTable table_1;
+	private JTable tableVersement;
+	private JTable tableRetrait;
+	DefaultTableModel modelVersement;
+	DefaultTableModel modelRetrait;
 
 	/**
 	 * Launch the application.
@@ -39,7 +50,7 @@ public class MouvementBancaire {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MouvementBancaire window = new MouvementBancaire();
+					MouvementBancaire window = new MouvementBancaire(null);
 					window.frame.setVisible(true);
 					window.frame.setLocationRelativeTo(null);	
 				} catch (Exception e) {
@@ -51,15 +62,33 @@ public class MouvementBancaire {
 
 	/**
 	 * Create the application.
+	 * @param id 
 	 */
-	public MouvementBancaire() {
-		initialize();
+	public MouvementBancaire(Long id) {
+		initialize(id);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @param id 
 	 */
-	private void initialize() {
+	private void initialize(Long id) {
+		
+		//System.out.println(id);
+		//----------------API--------------------------------------------------
+		
+		OperationClient operation = new OperationClient();		
+		List<ClientBean> UNClientBean = operation.getClientById(id);
+		
+		OperationVersement versements = new OperationVersement();
+		List<VersementBean> unVersement = versements.getVersementByClientId(id);
+		
+		OperationRetrait retraits = new OperationRetrait();
+		List<RetraitBean> unRetrait = retraits.getRetraitByClientId(id);
+		
+		
+		//----------------API--------------------------------------------------
+		
 		frame = new JFrame();
 		frame.setLocationRelativeTo(frame);
 		frame.setResizable(false);
@@ -98,20 +127,44 @@ public class MouvementBancaire {
 		panel_2.setBounds(500, 36, 4, 102);
 		panel_1.add(panel_2);
 		
-		Label numCompteLabel = new Label("Num\u00E9ro de compte :");
-		numCompteLabel.setFont(new Font("Century Gothic", Font.BOLD, 11));
-		numCompteLabel.setBounds(512, 39, 126, 22);
+		Label numCompte = new Label("Num\u00E9ro de compte :");
+		numCompte.setFont(new Font("Century Gothic", Font.BOLD, 11));
+		numCompte.setBounds(512, 39, 126, 22);
+		panel_1.add(numCompte);
+		
+		Label nom = new Label("Nom :");
+		nom.setFont(new Font("Century Gothic", Font.BOLD, 11));
+		nom.setBounds(510, 78, 45, 22);
+		panel_1.add(nom);
+		
+		Label solde = new Label("Solde actuel :");
+		solde.setFont(new Font("Century Gothic", Font.BOLD, 11));
+		solde.setBounds(512, 121, 126, 22);
+		panel_1.add(solde);
+		
+		Label numCompteLabel = new Label("");
+		numCompteLabel.setFont(new Font("Sylfaen", Font.BOLD, 12));
+		numCompteLabel.setBounds(653, 39, 276, 22);
 		panel_1.add(numCompteLabel);
 		
-		Label nomLabel = new Label("Nom :");
-		nomLabel.setFont(new Font("Century Gothic", Font.BOLD, 11));
-		nomLabel.setBounds(510, 78, 45, 22);
+		Label nomLabel = new Label("");
+		nomLabel.setFont(new Font("Sylfaen", Font.BOLD, 12));
+		nomLabel.setBounds(653, 78, 355, 22);
 		panel_1.add(nomLabel);
 		
-		Label soldeLabel = new Label("Solde actuel :");
-		soldeLabel.setFont(new Font("Century Gothic", Font.BOLD, 11));
-		soldeLabel.setBounds(512, 121, 126, 22);
+		Label soldeLabel = new Label("");
+		soldeLabel.setFont(new Font("Sylfaen", Font.BOLD, 12));
+		soldeLabel.setBounds(653, 121, 224, 22);
 		panel_1.add(soldeLabel);
+		
+		for (ClientBean unclient : UNClientBean) {
+			numCompteLabel.setText(unclient.getNumCompte());
+			nomLabel.setText(unclient.getNom() +" "+ unclient.getPrenoms());
+			soldeLabel.setText(unclient.getSolde().toString()+" ARIARY");
+			
+			//IdClientInput.setValue(unclient.getId());	
+			
+		}
 		
 		JSeparator separator = new JSeparator();
 		separator.setBackground(SystemColor.activeCaption);
@@ -144,12 +197,46 @@ public class MouvementBancaire {
 		retourBoutton.setBounds(792, 574, 141, 45);
 		panel.add(retourBoutton);
 		
-		table = new JTable();
-		table.setBounds(34, 203, 425, 351);
-		panel.add(table);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(34, 203, 425, 351);
+		panel.add(scrollPane);
 		
-		table_1 = new JTable();
-		table_1.setBounds(541, 203, 439, 351);
-		panel.add(table_1);
+		tableVersement = new JTable();
+		modelVersement = new DefaultTableModel();
+		Object[] column = {"N° de Versement","Montant [ARIARY]","Date de Versement"};
+		modelVersement.setColumnIdentifiers(column);
+		
+		Object[] row = new Object[3];		
+		for (VersementBean bean : unVersement) {
+			row[0] = bean.getId();
+			row[1] = bean.getMontantVersement();
+			row[2] = bean.getDate();
+			modelVersement.addRow(row);
+		}		
+		tableVersement.setModel(modelVersement);
+		
+		
+		scrollPane.setViewportView(tableVersement);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(541, 203, 439, 351);
+		panel.add(scrollPane_1);
+		
+		tableRetrait = new JTable();
+		modelRetrait = new DefaultTableModel();
+		Object[] column1 = {"N° de Chèque","Montant [ARIARY]","Date de Retrait"};
+		modelRetrait.setColumnIdentifiers(column1);
+		
+		Object[] row1 = new Object[3];
+		for (RetraitBean bean : unRetrait) {
+			row1[0] = bean.getNumCheque();
+			row1[1] = bean.getMontantRetrait();
+			row1[2] = bean.getDate();
+			modelRetrait.addRow(row1);
+		}		
+		tableRetrait.setModel(modelRetrait);
+		
+		
+		scrollPane_1.setViewportView(tableRetrait);
 	}
 }

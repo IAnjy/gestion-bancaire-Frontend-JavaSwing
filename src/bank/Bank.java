@@ -31,6 +31,7 @@ import org.json.simple.JSONObject;
 
 import header.Header;
 import retrait.Retrait;
+import transfert.Transfert;
 import utils.Recherche;
 import versement.Versement;
 
@@ -106,7 +107,7 @@ public class Bank {
 		panel.setLayout(null);
 		
 		
-		
+
 		
 		
 		
@@ -288,9 +289,11 @@ public class Bank {
 					//System.out.println(id);							
 					//Window.frame.hide();
 					frame.setVisible(false);
-					MouvementBancaire mouvementBancaire = new MouvementBancaire();
+					MouvementBancaire mouvementBancaire = new MouvementBancaire(id);
 					mouvementBancaire.frame.setVisible(true);
 					mouvementBancaire.frame.setLocationRelativeTo(null);
+					
+					
 					//ModifClient modifClient = new ModifClient(id);
 					//modifClient.frame.setVisible(true);
 					//modifClient.frame.setLocationRelativeTo(null);

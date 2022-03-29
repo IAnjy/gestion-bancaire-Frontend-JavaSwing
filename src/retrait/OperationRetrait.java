@@ -22,6 +22,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import versement.VersementBean;
 
 
 
@@ -124,6 +125,68 @@ public class OperationRetrait {
 		}
 		return false;
 		
+	}
+
+	public List<RetraitBean> getRetraitByClientId(Long id) {
+		List<RetraitBean> lista = new ArrayList<RetraitBean>();
+		OkHttpClient client = new OkHttpClient();
+		String urlGetRetraitByClientId = "http://localhost:8000/api/clients/"+id+"/retraits";
+		Request request = new Request
+				.Builder()
+				.url(urlGetRetraitByClientId)
+				.build();
+		Call call = client.newCall(request);	
+		try {
+			Response response = call.execute();
+			if (response.isSuccessful()) {
+				String jsonData = response.body().string();
+				JSONObject forcast;
+				try {
+					forcast = (JSONObject) JSONValue.parseWithException(jsonData);
+					JSONArray hydramember =  (JSONArray) forcast.get("hydra:member");
+	
+					for (int i = 0; i < hydramember.size(); i++) { 
+						
+						JSONObject unRetrait = (JSONObject) hydramember.get(i);
+						String numCheque = (String) unRetrait.get("numCheque");
+						Long montantRetrait = (Long) unRetrait.get("montantRetrait");
+						
+						//----Date
+						String date = (String) unRetrait.get("dateRetrait");
+						String trueDate = null;
+						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+						try {
+							Date daty = formatter.parse(date);
+							trueDate = new SimpleDateFormat("dd/MMM/YYYY HH:mm").format(daty);
+							
+						} catch (java.text.ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						//----Date
+												
+											
+						RetraitBean bean = new RetraitBean(null, null, numCheque, null, montantRetrait, trueDate);
+						//RetraitBean bean = new RetraitBean(numVersement, null, null, montantVersement, trueDate);
+						lista.add(bean);
+					} 						
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(null,  "Ooopsa! Une erreur est survenue! Veuillez réessayez SVP!", "ERREUR", JOptionPane.ERROR_MESSAGE);
+					System.exit(0);
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block						
+			System.err.println("erora !" + e);
+			JOptionPane.showMessageDialog(null, "Impossible de contacter la base de données", "ALERTE", JOptionPane.INFORMATION_MESSAGE);
+			System.exit(0);
+		}		
+		
+		return lista;
+	
 	}
 
 }
