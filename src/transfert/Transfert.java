@@ -11,29 +11,37 @@ import javax.swing.JLabel;
 import bank.Bank;
 import header.Header;
 import retrait.Retrait;
+import versement.OperationVersement;
 import versement.Versement;
+import versement.VersementBean;
 
 import java.awt.Panel;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.UIManager;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.JSpinner;
 import java.awt.Button;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JComboBox;
+import javax.swing.JScrollPane;
 
 public class Transfert {
 
 	public JFrame frame;
 	private JTable table;
+	DefaultTableModel model;
 
 	/**
 	 * Launch the application.
@@ -63,6 +71,16 @@ public class Transfert {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
+		
+		/*-----------------GET TRANSFERT---------------*/
+		
+		OperationTransfert operation = new OperationTransfert();		
+		List<TransfertBean> APITransfert = operation.getTransfert();
+		
+		/*-----------------FIN GET TRANSFERT---------------*/
+		
+		
 		frame = new JFrame();
 		frame.setLocationRelativeTo(frame);
 		frame.setResizable(false);
@@ -105,6 +123,10 @@ public class Transfert {
 		listeExpediteur.setBounds(10, 60, 101, 20);
 		panelExpediteur.add(listeExpediteur);
 		
+		JComboBox<String> idHiddenExpediteur = new JComboBox<String>();
+		idHiddenExpediteur.setBounds(10, 91, 101, 20);
+		panelExpediteur.add(idHiddenExpediteur);
+		
 		JLabel lblNumroDeCompte_1 = new JLabel("num\u00E9ro de compte :");
 		lblNumroDeCompte_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblNumroDeCompte_1.setBounds(10, 39, 106, 20);
@@ -125,6 +147,23 @@ public class Transfert {
 		labelSolde.setBounds(129, 91, 83, 22);
 		panelExpediteur.add(labelSolde);
 		
+		Label textNomExp = new Label("");
+		textNomExp.setFont(new Font("Tahoma", Font.BOLD, 11));
+		textNomExp.setBounds(177, 24, 170, 22);
+		panelExpediteur.add(textNomExp);
+		
+		Label textPrenomExp = new Label("");
+		textPrenomExp.setFont(new Font("Tahoma", Font.BOLD, 11));
+		textPrenomExp.setBounds(199, 56, 148, 22);
+		panelExpediteur.add(textPrenomExp);
+		
+		Label textSoldeExp = new Label("");
+		textSoldeExp.setFont(new Font("Tahoma", Font.BOLD, 11));
+		textSoldeExp.setBounds(209, 91, 138, 22);
+		panelExpediteur.add(textSoldeExp);
+		
+		
+		
 		JPanel panelDestinataire = new JPanel();
 		panelDestinataire.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "DESTINATAIRE", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panelDestinataire.setBounds(610, 188, 357, 146);
@@ -137,9 +176,13 @@ public class Transfert {
 		separator_1.setBounds(126, 23, 9, 108);
 		panelDestinataire.add(separator_1);
 		
-		JComboBox<String> listeExpediteur_1 = new JComboBox<String>();
-		listeExpediteur_1.setBounds(15, 64, 101, 20);
-		panelDestinataire.add(listeExpediteur_1);
+		JComboBox<String> listeDestinataire = new JComboBox<String>();
+		listeDestinataire.setBounds(15, 64, 101, 20);
+		panelDestinataire.add(listeDestinataire);
+		
+		JComboBox<String> idHiddenDestinataire = new JComboBox<String>();
+		idHiddenDestinataire.setBounds(15, 95, 101, 20);
+		panelDestinataire.add(idHiddenDestinataire);
 		
 		JLabel lblNumroDeCompte = new JLabel("num\u00E9ro de compte :");
 		lblNumroDeCompte.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -161,15 +204,9 @@ public class Transfert {
 		labelSolde_1.setBounds(133, 98, 83, 22);
 		panelDestinataire.add(labelSolde_1);
 		
-		Label historique = new Label("Historique(s) des tranferts");
-		historique.setForeground(Color.BLACK);
-		historique.setFont(new Font("Papyrus", Font.BOLD | Font.ITALIC, 14));
-		historique.setBounds(422, 342, 184, 22);
-		panel.add(historique);
 		
-		table = new JTable();
-		table.setBounds(195, 370, 616, 229);
-		panel.add(table);
+		
+		
 		
 		JSpinner spinner = new JSpinner();
 		spinner.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -187,6 +224,46 @@ public class Transfert {
 		Label labelMontantTransfert = new Label("Montant*");
 		labelMontantTransfert.setBounds(444, 199, 48, 22);
 		panel.add(labelMontantTransfert);
+		
+		Label historique = new Label("Historique(s) des tranferts");
+		historique.setForeground(Color.BLACK);
+		historique.setFont(new Font("Papyrus", Font.BOLD | Font.ITALIC, 14));
+		historique.setBounds(422, 342, 184, 22);
+		panel.add(historique);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(157, 370, 700, 229);
+		panel.add(scrollPane);
+		
+		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		table.setBackground(Color.WHITE);
+		model = new DefaultTableModel();
+		
+		Object[] column = {"N° Transfert","N° Compte Expéditeur","N° Compte Destinataire", "Montant [ARIARY]","Date de Transfert"};
+		model.setColumnIdentifiers(column);
+		Object[] row = new Object[5];
+		
+		for (TransfertBean bean : APITransfert) {
+			
+			row[0] = bean.getId();
+			row[3] = bean.getMontantTransfert();
+			row[1] = bean.getNumCompteExpediteur();
+			row[2] = bean.getNumCompteDestinataire();
+			row[4] = bean.getDate();
+			
+			model.addRow(row);
+		}
+		
+		table.setModel(model);
+		
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+		table.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+		table.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
+		
+		scrollPane.setViewportView(table);
 		
 		
 	}

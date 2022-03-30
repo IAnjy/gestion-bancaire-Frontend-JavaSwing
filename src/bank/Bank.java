@@ -206,7 +206,7 @@ public class Bank {
 			public void actionPerformed(ActionEvent arg0) {
 				Integer i = table.getSelectedRow();
 				if (i>=0) {
-					Integer reply = JOptionPane.showConfirmDialog(frame,  "Voulez-vous vraiment supprimé ?!", "COMFIRMATION", JOptionPane.YES_NO_OPTION);
+					Integer reply = JOptionPane.showConfirmDialog(frame,  "Voulez-vous vraiment supprimer ?!", "CONFIRMATION", JOptionPane.YES_NO_OPTION);
 					if (reply == JOptionPane.YES_OPTION) {
 						//get id de GO http request
 						Long id = (Long) model.getValueAt(i, 4);

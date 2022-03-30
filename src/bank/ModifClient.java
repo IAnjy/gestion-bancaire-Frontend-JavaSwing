@@ -62,6 +62,9 @@ public class ModifClient {
 			initialize(id);
 		}
 		
+		/*		
+		initialize(id);
+		*/
 	}
 
 	/**
