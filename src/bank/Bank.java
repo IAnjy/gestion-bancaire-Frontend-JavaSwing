@@ -28,9 +28,17 @@ import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.json.simple.parser.ParseException;
 
 import header.Header;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrait.Retrait;
+import transfert.OperationTransfert;
 import transfert.Transfert;
 import utils.Recherche;
 import versement.Versement;
@@ -39,8 +47,11 @@ import java.awt.TextField;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CompletableFuture.AsynchronousCompletionTask;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -58,6 +69,7 @@ public class Bank {
 	public JFrame frame;
 	private JTable table;
 	DefaultTableModel model;
+	List<ClientBean> lista ;
 
 	/**
 	 * Launch the application.
@@ -82,6 +94,9 @@ public class Bank {
 	public Bank() {
 		initialize();
 	}
+	
+	
+	
 
 	/**
 	 * Initialize the contents of the frame.
@@ -254,6 +269,7 @@ public class Bank {
 		
 		Object[] row = new Object[5];
 		model.setColumnIdentifiers(column);
+		//System.out.println(lista);
 		
 		for (ClientBean bean : APIClient) {
 			
@@ -265,6 +281,7 @@ public class Bank {
 			
 			model.addRow(row);
 		}
+		
 		
 		
 		table.setModel(model);
@@ -319,4 +336,6 @@ public class Bank {
 		// TODO Auto-generated method stub
 		panely.setBackground(new java.awt.Color(255,255,255));
 	}
+	
+	
 }

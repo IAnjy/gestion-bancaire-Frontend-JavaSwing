@@ -7,8 +7,11 @@ import java.awt.Label;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import bank.Bank;
+import bank.ClientBean;
+import bank.OperationClient;
 import header.Header;
 import retrait.Retrait;
 import versement.OperationVersement;
@@ -36,6 +39,13 @@ import javax.swing.SwingConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
+import java.awt.Choice;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.event.ActionEvent;
 
 public class Transfert {
 
@@ -80,6 +90,13 @@ public class Transfert {
 		
 		/*-----------------FIN GET TRANSFERT---------------*/
 		
+		//--------------------------------------------
+		
+		OperationClient getCli = new OperationClient();		
+		List<ClientBean> APIClient = getCli.getClient();
+				
+		//--------------------------------------------
+		
 		
 		frame = new JFrame();
 		frame.setLocationRelativeTo(frame);
@@ -119,14 +136,6 @@ public class Transfert {
 		separator_1_1.setBounds(120, 23, 9, 108);
 		panelExpediteur.add(separator_1_1);
 		
-		JComboBox<String> listeExpediteur = new JComboBox<String>();
-		listeExpediteur.setBounds(10, 60, 101, 20);
-		panelExpediteur.add(listeExpediteur);
-		
-		JComboBox<String> idHiddenExpediteur = new JComboBox<String>();
-		idHiddenExpediteur.setBounds(10, 91, 101, 20);
-		panelExpediteur.add(idHiddenExpediteur);
-		
 		JLabel lblNumroDeCompte_1 = new JLabel("num\u00E9ro de compte :");
 		lblNumroDeCompte_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblNumroDeCompte_1.setBounds(10, 39, 106, 20);
@@ -162,6 +171,14 @@ public class Transfert {
 		textSoldeExp.setBounds(209, 91, 138, 22);
 		panelExpediteur.add(textSoldeExp);
 		
+		Choice listeExp = new Choice();
+		listeExp.setBounds(10, 65, 104, 20);
+		panelExpediteur.add(listeExp);
+		
+		Choice IDhiddenExp = new Choice();
+		IDhiddenExp.setBounds(32, 91, 67, 20);
+		panelExpediteur.add(IDhiddenExp);
+		IDhiddenExp.setVisible(false);
 		
 		
 		JPanel panelDestinataire = new JPanel();
@@ -175,14 +192,6 @@ public class Transfert {
 		separator_1.setBackground(SystemColor.activeCaption);
 		separator_1.setBounds(126, 23, 9, 108);
 		panelDestinataire.add(separator_1);
-		
-		JComboBox<String> listeDestinataire = new JComboBox<String>();
-		listeDestinataire.setBounds(15, 64, 101, 20);
-		panelDestinataire.add(listeDestinataire);
-		
-		JComboBox<String> idHiddenDestinataire = new JComboBox<String>();
-		idHiddenDestinataire.setBounds(15, 95, 101, 20);
-		panelDestinataire.add(idHiddenDestinataire);
 		
 		JLabel lblNumroDeCompte = new JLabel("num\u00E9ro de compte :");
 		lblNumroDeCompte.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -204,22 +213,159 @@ public class Transfert {
 		labelSolde_1.setBounds(133, 98, 83, 22);
 		panelDestinataire.add(labelSolde_1);
 		
+		Label textNomDest = new Label("");
+		textNomDest.setFont(new Font("Tahoma", Font.BOLD, 11));
+		textNomDest.setBounds(181, 32, 170, 22);
+		panelDestinataire.add(textNomDest);
+		
+		Label textPrenomDest = new Label("");
+		textPrenomDest.setFont(new Font("Tahoma", Font.BOLD, 11));
+		textPrenomDest.setBounds(203, 64, 148, 22);
+		panelDestinataire.add(textPrenomDest);
+		
+		Label textSoldeDest = new Label("");
+		textSoldeDest.setFont(new Font("Tahoma", Font.BOLD, 11));
+		textSoldeDest.setBounds(209, 95, 138, 22);
+		panelDestinataire.add(textSoldeDest);
+		
+		Choice listeDest = new Choice();
+		listeDest.setBounds(10, 69, 104, 20);
+		panelDestinataire.add(listeDest);
+		
+		Choice IDhiddenDest = new Choice();
+		IDhiddenDest.setBounds(32, 95, 67, 20);
+		panelDestinataire.add(IDhiddenDest);
+		IDhiddenDest.setVisible(false);
+		
+		//--------------------------------------------------------------------------
+		
+		for (ClientBean bean : APIClient) {			
+			
+			listeExp.addItem(bean.getNumCompte());
+			IDhiddenExp.addItem(bean.getId().toString());
+			
+			listeDest.addItem(bean.getNumCompte());
+			IDhiddenDest.addItem(bean.getId().toString());
+		}
+	
+		
+		//--------------------------------------------------------------------------
+		JSpinner IDclientExp = new JSpinner();
+		IDclientExp.setModel(new SpinnerNumberModel(new Long(0), null, null, new Long(1)));
+		IDclientExp.setBounds(138, 173, 39, 20);
+		panel.add(IDclientExp);
+		IDclientExp.setVisible(false);
+		
+		JSpinner IDclientDest = new JSpinner();
+		IDclientDest.setModel(new SpinnerNumberModel(new Long(0), null, null, new Long(1)));
+		IDclientDest.setBounds(742, 173, 39, 20);
+		panel.add(IDclientDest);
+		IDclientDest.setVisible(false);
+		
+		//---------------------Fill INformation------------------------
+		
+			listeExp.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent arg0) {
+					
+					int i = listeExp.getSelectedIndex();
+					String temp = IDhiddenExp.getItem(i);
+					System.out.println(temp);
+					Long idClientExp = (long) Integer.parseInt(temp);
+					
+					OperationClient op = new OperationClient();
+					
+					List<ClientBean> UNClientBean = op.getClientById(idClientExp);
+					
+					for (ClientBean unclient : UNClientBean) {				
+						textNomExp.setText(unclient.getNom());
+						textPrenomExp.setText(unclient.getPrenoms());
+						textSoldeExp.setText(unclient.getSolde().toString()+ " ARIARY");
+						IDclientExp.setValue(unclient.getId());
+						//IDclient.setValue(unclient.getId());
+					}
+				}
+			});
+			
+			listeDest.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent arg0) {
+					
+					int i = listeDest.getSelectedIndex();
+					String temp = IDhiddenDest.getItem(i);
+					
+					Long idClientDest = (long) Integer.parseInt(temp);
+					
+					OperationClient op = new OperationClient();
+					
+					List<ClientBean> UNClientBean = op.getClientById(idClientDest);
+					
+					for (ClientBean unclient : UNClientBean) {				
+						textNomDest.setText(unclient.getNom());
+						textPrenomDest.setText(unclient.getPrenoms());
+						textSoldeDest.setText(unclient.getSolde().toString()+ " ARIARY");
+						IDclientDest.setValue(unclient.getId());
+					}
+				}
+			});
+				
+		//---------------------Fill INformation------------------------
+		JSpinner montantTransfert = new JSpinner();
+		montantTransfert.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		montantTransfert.setModel(new SpinnerNumberModel(new Long(100), new Long(100), null, new Long(1)));
+		montantTransfert.setBounds(444, 224, 129, 28);
+		panel.add(montantTransfert);
 		
 		
 		
+		//------------------------POST------------------------------
 		
-		JSpinner spinner = new JSpinner();
-		spinner.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		spinner.setModel(new SpinnerNumberModel(new Long(100), new Long(100), null, new Long(1)));
-		spinner.setBounds(444, 224, 129, 28);
-		panel.add(spinner);
+		Button transferer = new Button("TRANSFERER");
+		transferer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				Long idExp = (Long) IDclientExp.getValue();
+				Long idDest = (Long) IDclientDest.getValue();
+				
+				Long montTransfert = (Long) montantTransfert.getValue();
+				
+				if(idExp == 0 || idDest ==0) {
+					JOptionPane.showMessageDialog(frame,  "Veuillez séléctionner un expéditeur / un destinataire SVP!", "ERREUR", JOptionPane.ERROR_MESSAGE);//System.out.println("tsisy select");
+				}else {
+					
+					if(idExp == idDest) {
+						JOptionPane.showMessageDialog(frame,  "Desolé, vous ne pouvez pas faire un transfert sur un même compte!", "ERREUR", JOptionPane.ERROR_MESSAGE);
+					}else {
+						//System.out.println("Transfert...");
+						Integer reply = JOptionPane.showConfirmDialog(frame,  "Voulez-vous vraiment transférer ?! Cette opération est irréversible", "CONFIRMATION", JOptionPane.YES_NO_OPTION);
+						if (reply == JOptionPane.YES_OPTION) {
+							TransfertBean transfert = new TransfertBean(null, montTransfert, idExp.toString(), idDest.toString(), "");
+							OperationTransfert op = new OperationTransfert();
+							Boolean vita = op.ajoutTransfert(transfert);
+							if (vita) {
+								frame.setVisible(false);
+								Transfert trans = new Transfert();
+								trans.frame.setVisible(true);
+								trans.frame.setLocationRelativeTo(null);
+								JOptionPane.showMessageDialog(frame,  "Transfert réussi !");
+								
+							} else {
+								JOptionPane.showMessageDialog(frame, "Une erreur s'est produite. Veuillez réessayez !", "Erreur", JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					}
+				}
+				
+				
+			}
+		});
 		
-		Button tranferer = new Button("TRANSFERER");
-		tranferer.setForeground(Color.WHITE);
-		tranferer.setFont(new Font("Sylfaen", Font.BOLD, 12));
-		tranferer.setBackground(SystemColor.activeCaption);
-		tranferer.setBounds(444, 279, 129, 40);
-		panel.add(tranferer);
+		
+		//------------------------POST------------------------------
+		
+		
+		transferer.setForeground(Color.WHITE);
+		transferer.setFont(new Font("Sylfaen", Font.BOLD, 12));
+		transferer.setBackground(SystemColor.activeCaption);
+		transferer.setBounds(444, 279, 129, 40);
+		panel.add(transferer);
 		
 		Label labelMontantTransfert = new Label("Montant*");
 		labelMontantTransfert.setBounds(444, 199, 48, 22);
@@ -264,6 +410,12 @@ public class Transfert {
 		table.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
 		
 		scrollPane.setViewportView(table);
+		
+		
+		
+		
+	
+		
 		
 		
 	}
