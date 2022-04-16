@@ -22,7 +22,6 @@ import java.awt.Button;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 public class ModifClient {

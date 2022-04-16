@@ -4,24 +4,17 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Label;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import bank.Bank;
 import bank.ClientBean;
 import bank.OperationClient;
 import header.Header;
-import retrait.Retrait;
-import versement.OperationVersement;
-import versement.Versement;
-import versement.VersementBean;
+import utils.Pdf;
 
 import java.awt.Panel;
 import java.awt.SystemColor;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -37,20 +30,19 @@ import java.awt.Button;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import java.awt.Choice;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
+import java.text.MessageFormat;
 import java.awt.event.ActionEvent;
+import javax.swing.JButton;
 
 public class Transfert {
 
 	public JFrame frame;
-	private JTable table;
+	private JTable tableTransfert;
 	DefaultTableModel model;
 
 	/**
@@ -225,7 +217,7 @@ public class Transfert {
 		
 		Label textSoldeDest = new Label("");
 		textSoldeDest.setFont(new Font("Tahoma", Font.BOLD, 11));
-		textSoldeDest.setBounds(209, 95, 138, 22);
+		textSoldeDest.setBounds(213, 95, 157, 22);
 		panelDestinataire.add(textSoldeDest);
 		
 		Choice listeDest = new Choice();
@@ -381,10 +373,10 @@ public class Transfert {
 		scrollPane.setBounds(157, 370, 700, 229);
 		panel.add(scrollPane);
 		
-		table = new JTable();
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		table.setBackground(Color.WHITE);
+		tableTransfert = new JTable();
+		tableTransfert.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableTransfert.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		tableTransfert.setBackground(Color.WHITE);
 		model = new DefaultTableModel();
 		
 		Object[] column = {"N° Transfert","N° Compte Expéditeur","N° Compte Destinataire", "Montant [ARIARY]","Date de Transfert"};
@@ -402,14 +394,25 @@ public class Transfert {
 			model.addRow(row);
 		}
 		
-		table.setModel(model);
+		tableTransfert.setModel(model);
 		
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-		table.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
-		table.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
+		tableTransfert.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+		tableTransfert.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
 		
-		scrollPane.setViewportView(table);
+		scrollPane.setViewportView(tableTransfert);
+		
+		JButton btnImprimer = new JButton("Imprimer");
+		btnImprimer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Pdf pdf = new Pdf();
+				MessageFormat header = new MessageFormat("Liste des Transferts : ");
+				pdf.print(tableTransfert, header);
+			}
+		});
+		btnImprimer.setBounds(768, 598, 89, 26);
+		panel.add(btnImprimer);
 		
 		
 		

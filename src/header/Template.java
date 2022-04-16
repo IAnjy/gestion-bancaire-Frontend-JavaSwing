@@ -1,25 +1,18 @@
 package header;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Label;
 import java.awt.Panel;
 import java.awt.SystemColor;
-import java.awt.TextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JTable;
 
-import bank.AjoutClient;
 import bank.Bank;
-import bank.ModifClient;
 import versement.Versement;
 
 public class Template {

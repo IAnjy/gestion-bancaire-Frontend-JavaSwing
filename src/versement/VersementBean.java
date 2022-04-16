@@ -1,6 +1,5 @@
 package versement;
 
-import java.util.Date;
 
 public class VersementBean {
 	

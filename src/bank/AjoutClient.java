@@ -11,11 +11,8 @@ import java.awt.SystemColor;
 import java.awt.Label;
 import java.awt.Font;
 import java.awt.Color;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 
-import javax.lang.model.type.TypeVariable;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.TitledBorder;

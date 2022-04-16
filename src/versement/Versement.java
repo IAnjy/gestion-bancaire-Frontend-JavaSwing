@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import header.Header;
+import utils.Pdf;
 import utils.Recherche;
 
 import java.awt.Label;
@@ -23,20 +24,18 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import bank.AjoutClient;
-import bank.ClientBean;
-import bank.OperationClient;
-
 import javax.swing.JScrollPane;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.MessageFormat;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JButton;
 
 public class Versement {
 
 	public JFrame frame;
-	private JTable table;
+	private JTable tableVersement;
 	DefaultTableModel model;
 
 	/**
@@ -128,7 +127,7 @@ public class Versement {
 				String query = recherche_versement.getText();
 				//System.out.println(query);
 				Recherche recherche = new Recherche();
-				recherche.sort(query, model, table);
+				recherche.sort(query, model, tableVersement);
 			}
 		});
 		recherche_versement.setBounds(687, 194, 261, 26);
@@ -138,11 +137,11 @@ public class Versement {
 		scrollPane.setBounds(83, 233, 865, 370);
 		panel.add(scrollPane);
 		
-		table = new JTable();
+		tableVersement = new JTable();
 		
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		table.setBackground(Color.WHITE);
+		tableVersement.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableVersement.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		tableVersement.setBackground(Color.WHITE);
 		model = new DefaultTableModel();
 		Object[] column = {"N° de Versement","N° de Compte","Nom", "Montant [ARIARY]","Date de Versement"};
 		
@@ -163,20 +162,31 @@ public class Versement {
 		
 		
 		
-		table.setModel(model);
+		tableVersement.setModel(model);
 
 
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-		table.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
-		table.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
+		tableVersement.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+		tableVersement.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
 		
-		TableColumnModel columnModel = table.getColumnModel();
+		TableColumnModel columnModel = tableVersement.getColumnModel();
 		columnModel.getColumn(0).setPreferredWidth(1);
 		columnModel.getColumn(1).setPreferredWidth(1);
 		columnModel.getColumn(3).setPreferredWidth(1);
 		
-		scrollPane.setViewportView(table);
+		scrollPane.setViewportView(tableVersement);
+		
+		JButton btnImprimer = new JButton("Imprimer");
+		btnImprimer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Pdf pdf = new Pdf();
+				MessageFormat header = new MessageFormat("Liste des Versements : ");
+				pdf.print(tableVersement, header);
+			}
+		});
+		btnImprimer.setBounds(215, 194, 89, 26);
+		panel.add(btnImprimer);
 		
 		
 		

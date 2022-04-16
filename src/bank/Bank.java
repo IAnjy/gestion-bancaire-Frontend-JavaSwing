@@ -2,7 +2,7 @@ package bank;
 
 import java.awt.EventQueue;
 
-import javax.swing.ImageIcon;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,57 +17,31 @@ import java.awt.event.ActionEvent;
 import java.awt.Panel;
 import java.awt.SystemColor;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.Color;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
 
 import header.Header;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import retrait.Retrait;
-import transfert.OperationTransfert;
-import transfert.Transfert;
+import utils.Pdf;
 import utils.Recherche;
-import versement.Versement;
 
 import java.awt.TextField;
-import java.awt.Window;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.text.MessageFormat;
 import java.util.List;
-import java.util.Vector;
-import java.util.concurrent.CompletableFuture.AsynchronousCompletionTask;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.RowFilter;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.JSpinner;
-import java.awt.Canvas;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
+import javax.swing.JButton;
 
 public class Bank {
 
 	public JFrame frame;
-	private JTable table;
+	private JTable tableClient;
 	DefaultTableModel model;
 	List<ClientBean> lista ;
 
@@ -147,7 +121,7 @@ public class Bank {
 		ajouter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				String NumCompteFarany = (String) model.getValueAt(table.getRowCount()-1, 0);
+				String NumCompteFarany = (String) model.getValueAt(tableClient.getRowCount()-1, 0);
 				String temp = NumCompteFarany.substring(1, NumCompteFarany.length());// manala anle "C" ammn numCompte
 				int next = Integer.parseInt(temp) + 1;
 				String nextNumCompte = "";
@@ -185,7 +159,7 @@ public class Bank {
 				String query = recherche_client.getText();
 				//System.out.println(query);
 				Recherche recherche = new Recherche();
-				recherche.sort(query, model, table);
+				recherche.sort(query, model, tableClient);
 			}
 		});
 		recherche_client.setBounds(702, 194, 240, 26);
@@ -194,7 +168,7 @@ public class Bank {
 		Button modifier = new Button("Modifier");
 		modifier.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Integer i = table.getSelectedRow();
+				Integer i = tableClient.getSelectedRow();
 				if (i>=0) {		
 					Long id = (Long) model.getValueAt(i, 4);
 					//System.out.println(id);							
@@ -219,7 +193,7 @@ public class Bank {
 		Button supprimer = new Button("Supprimer");
 		supprimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Integer i = table.getSelectedRow();
+				Integer i = tableClient.getSelectedRow();
 				if (i>=0) {
 					Integer reply = JOptionPane.showConfirmDialog(frame,  "Voulez-vous vraiment supprimer ?!", "CONFIRMATION", JOptionPane.YES_NO_OPTION);
 					if (reply == JOptionPane.YES_OPTION) {
@@ -260,10 +234,10 @@ public class Bank {
 		scrollPane.setBounds(77, 240, 865, 370);
 		panel.add(scrollPane);
 		
-		table = new JTable();
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		table.setBackground(Color.WHITE);
+		tableClient = new JTable();
+		tableClient.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableClient.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		tableClient.setBackground(Color.WHITE);
 		model = new DefaultTableModel();
 		Object[] column = {"Numéro Compte","Nom","Prénoms", "SOLDE [ARIARY]","id"};
 		
@@ -284,23 +258,28 @@ public class Bank {
 		
 		
 		
-		table.setModel(model);
-		table.removeColumn(table.getColumnModel().getColumn(4));
+		tableClient.setModel(model);
+		tableClient.removeColumn(tableClient.getColumnModel().getColumn(4));
 		
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-		table.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+		tableClient.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
 		
-		TableColumnModel columnModel = table.getColumnModel();
-		columnModel.getColumn(0).setPreferredWidth(2);
+		TableColumnModel columnModel = tableClient.getColumnModel();
+		columnModel.getColumn(0).setPreferredWidth(1);
+		
+		//------------------------------------------------------------------------------
+		columnModel.getColumn(1).setPreferredWidth(2);
+		columnModel.getColumn(2).setPreferredWidth(2);
+		columnModel.getColumn(3).setPreferredWidth(1);
 		
 		
-		scrollPane.setViewportView(table);
+		scrollPane.setViewportView(tableClient);
 		
 		Button mouvementBancaire = new Button("Mouvement Bancaire");
 		mouvementBancaire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Integer i = table.getSelectedRow();
+				Integer i = tableClient.getSelectedRow();
 				if (i>=0) {		
 					Long id = (Long) model.getValueAt(i, 4);
 					//System.out.println(id);							
@@ -325,6 +304,32 @@ public class Bank {
 		mouvementBancaire.setBackground(SystemColor.activeCaption);
 		mouvementBancaire.setBounds(312, 194, 141, 26);
 		panel.add(mouvementBancaire);
+		
+		JButton btnImprimer = new JButton("Imprimer");
+		btnImprimer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			/*	StringBuilder builder = new StringBuilder();
+				builder.append("line 1");
+				builder.append(System.getProperty("line.separator"));
+				builder.append("line 2");
+				builder.append(System.getProperty("line.separator"));
+				builder.append("line 3");
+				
+				*/
+				//MessageFormat header = new MessageFormat(builder.toString());
+				
+				//String newLine = System.getProperty("line.separator");
+				
+				//System.out.println(builder.toString());
+				//MessageFormat titre = new MessageFormat("Liste des clients : ");
+				Pdf pdf = new Pdf();
+				MessageFormat header = new MessageFormat("Liste des clients : ");
+				pdf.print(tableClient, header);
+				
+			}
+		});
+		btnImprimer.setBounds(459, 194, 89, 26);
+		panel.add(btnImprimer);
 	}
 	
 	public void resetColor(Panel panely) {
@@ -336,6 +341,4 @@ public class Bank {
 		// TODO Auto-generated method stub
 		panely.setBackground(new java.awt.Color(255,255,255));
 	}
-	
-	
 }

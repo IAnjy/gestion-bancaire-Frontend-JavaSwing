@@ -8,10 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import header.Header;
+import utils.Pdf;
 import utils.Recherche;
-import versement.AjoutVersement;
-import versement.OperationVersement;
-import versement.VersementBean;
 
 import java.awt.Label;
 import java.awt.Font;
@@ -28,13 +26,15 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.MessageFormat;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JButton;
 
 public class Retrait {
 
 	public JFrame frame;
-	private JTable table;
+	private JTable tableRetrait;
 	DefaultTableModel model;
 
 	/**
@@ -127,7 +127,7 @@ public class Retrait {
 				String query = recherche_retrait.getText();
 				//System.out.println(query);
 				Recherche recherche = new Recherche();
-				recherche.sort(query, model, table);
+				recherche.sort(query, model, tableRetrait);
 			}
 		});
 		recherche_retrait.setBounds(687, 194, 261, 26);
@@ -137,10 +137,10 @@ public class Retrait {
 		scrollPane.setBounds(83, 233, 865, 370);
 		panel.add(scrollPane);
 		
-		table = new JTable();
-		table.setBackground(Color.WHITE);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		tableRetrait = new JTable();
+		tableRetrait.setBackground(Color.WHITE);
+		tableRetrait.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableRetrait.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		model = new DefaultTableModel();
 		Object[] column = {"id","N° de Compte","N° de Chèque","Nom", "Montant [ARIARY]","Date de Retrait"};
@@ -161,20 +161,32 @@ public class Retrait {
 		}
 		
 
-		table.setModel(model);
-		table.removeColumn(table.getColumnModel().getColumn(0));
+		tableRetrait.setModel(model);
+		tableRetrait.removeColumn(tableRetrait.getColumnModel().getColumn(0));
 		
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-		table.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
-		table.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
+		tableRetrait.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+		tableRetrait.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
 		
-		TableColumnModel columnModel = table.getColumnModel();
+		TableColumnModel columnModel = tableRetrait.getColumnModel();
 		columnModel.getColumn(0).setPreferredWidth(1);
 		columnModel.getColumn(1).setPreferredWidth(1);
 		columnModel.getColumn(3).setPreferredWidth(1);
 		
-		scrollPane.setViewportView(table);
+		scrollPane.setViewportView(tableRetrait);
+		
+		JButton btnImprimer = new JButton("Imprimer");
+		btnImprimer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Pdf pdf = new Pdf();
+				MessageFormat header = new MessageFormat("Liste des Retraits : ");
+				pdf.print(tableRetrait, header);
+			}
+		});
+		
+		btnImprimer.setBounds(222, 194, 89, 26);
+		panel.add(btnImprimer);
 		
 	}
 

@@ -7,22 +7,19 @@ import java.awt.Label;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import header.Header;
 import retrait.OperationRetrait;
-import retrait.Retrait;
 import retrait.RetraitBean;
 import versement.OperationVersement;
-import versement.Versement;
 import versement.VersementBean;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Panel;
 import java.awt.SystemColor;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.print.PrinterException;
+import java.text.MessageFormat;
 import java.util.List;
 
 import javax.swing.JSeparator;
@@ -238,5 +235,24 @@ public class MouvementBancaire {
 		
 		
 		scrollPane_1.setViewportView(tableRetrait);
+		
+		Button btnImprimer = new Button("IMPRIMER");
+		btnImprimer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					MessageFormat footer = new MessageFormat("Page{0,number,integer}");
+					tableVersement.print(JTable.PrintMode.FIT_WIDTH, new MessageFormat("Versement : "+numCompteLabel.getText()+" "+nomLabel.getText()), footer);
+					tableRetrait.print(JTable.PrintMode.FIT_WIDTH, new MessageFormat("Retrait : "+numCompteLabel.getText()+" "+nomLabel.getText()), footer);
+				} catch (PrinterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		btnImprimer.setForeground(Color.WHITE);
+		btnImprimer.setFont(new Font("Sylfaen", Font.BOLD, 14));
+		btnImprimer.setBackground(SystemColor.activeCaption);
+		btnImprimer.setBounds(608, 574, 141, 45);
+		panel.add(btnImprimer);
 	}
 }

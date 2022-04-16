@@ -14,7 +14,6 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
 
-import bank.Bank;
 import bank.ClientBean;
 import bank.OperationClient;
 
@@ -22,13 +21,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import java.awt.Component;
-import javax.swing.Box;
 import javax.swing.UIManager;
 import javax.swing.JSpinner;
 import java.awt.Button;
 import java.awt.event.ActionListener;
-import java.beans.EventSetDescriptor;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.SpinnerNumberModel;
